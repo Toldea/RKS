@@ -4,10 +4,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import toldea.rittaikidousouchi.managers.PacketManager;
 
 public class EntityGrappleHook extends EntityArrow {
+	public static final double ROPE_LENGTH = 10.0;
+	
 	private EntityPlayer ownerEntity;
 	boolean active = false;
 
@@ -42,6 +45,60 @@ public class EntityGrappleHook extends EntityArrow {
 		}
 		return this.ownerEntity;
 	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if (active) {
+			if (getOwner() != null) {
+				double dx = this.posX - ownerEntity.posX;
+				double dy = this.posY - ownerEntity.posY;
+				double dz = this.posZ - ownerEntity.posZ;
+				double length = (double) MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
+				// Constrain the player's position to the max length of rope.
+				if (length > ROPE_LENGTH) {
+					// Normalize and multiply by the length to get the 'theoretical max position'.
+					Vec3 vec = Vec3.createVectorHelper(dx, dy, dz);
+					vec = vec.normalize();
+					vec.xCoord *= ROPE_LENGTH;
+					vec.yCoord *= ROPE_LENGTH;
+					vec.zCoord *= ROPE_LENGTH;
+					// Subtract the actual current deltas to get the adjustment we need to make.
+					vec.xCoord -= dx;
+					vec.yCoord -= dy;
+					vec.zCoord -= dz;
+					// Update the player's position with this adjustment.
+					ownerEntity.setPosition(ownerEntity.posX - vec.xCoord, ownerEntity.posY - vec.yCoord, ownerEntity.posZ - vec.zCoord);
+				}
+			}
+		}
+		/*
+		if (active) {
+			System.out.println("Grappling hook is pulling!");
+			double dx = this.posX - ownerEntity.posX;
+			double dy = this.posY - ownerEntity.posY;
+			double dz = this.posZ - ownerEntity.posZ;
+			double length = (double) MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
+			double strength = 0.3D;
+			ownerEntity.motionX += dx * strength;
+			ownerEntity.motionY += dy * strength + (double) MathHelper.sqrt_double(length) * 0.08D;
+			ownerEntity.motionZ += dz * strength;
+		}
+		*/
+	}
+	
+	@Override
+	public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
+		/*
+		//if (!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0)
+		if (this.inGround && this.arrowShake <= 0) {
+			if (active) {
+				active = false;
+				System.out.println("Collided with grappling hook, setting inactive!");
+			}
+		}
+		*/
+	}
 
 	public void pullOwnerEntityTowardsHook() {
 		if (!active) {
@@ -49,16 +106,7 @@ public class EntityGrappleHook extends EntityArrow {
 			if (ownerEntity == null) {
 				return;
 			}
-			double d0 = this.posX - ownerEntity.posX;
-			double d1 = this.posY - ownerEntity.posY;
-			double d2 = this.posZ - ownerEntity.posZ;
-			double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d1 * d1 + d2 * d2);
-			double d4 = 0.1D;
-			ownerEntity.motionX += d0 * d4;
-			ownerEntity.motionY += d1 * d4 + (double) MathHelper.sqrt_double(d3) * 0.08D;
-			ownerEntity.motionZ += d2 * d4;
 			active = true;
-			System.out.println("DISCIPLINE: " + worldObj.isRemote);
 			if (!this.worldObj.isRemote) {
 				PacketManager.sendActiveGrappleHookPacketToAllPlayers(this);	
 			}
