@@ -9,8 +9,8 @@ import net.minecraft.world.World;
 import toldea.rittaikidousouchi.managers.PacketManager;
 
 public class EntityGrappleHook extends EntityArrow {
-	public static final double ROPE_LENGTH = 10.0;
-	
+	public static final double MAX_ROPE_LENGTH = 10.0;
+	private double ropeLength = MAX_ROPE_LENGTH;
 	private EntityPlayer ownerEntity;
 	boolean active = false;
 
@@ -50,19 +50,22 @@ public class EntityGrappleHook extends EntityArrow {
 	public void onUpdate() {
 		super.onUpdate();
 		if (active) {
+			if (ropeLength > .0) {
+				ropeLength -= .5;
+			}
 			if (getOwner() != null) {
 				double dx = this.posX - ownerEntity.posX;
 				double dy = this.posY - ownerEntity.posY;
 				double dz = this.posZ - ownerEntity.posZ;
 				double length = (double) MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
 				// Constrain the player's position to the max length of rope.
-				if (length > ROPE_LENGTH) {
+				if (length > ropeLength) {
 					// Normalize and multiply by the length to get the 'theoretical max position'.
 					Vec3 vec = Vec3.createVectorHelper(dx, dy, dz);
 					vec = vec.normalize();
-					vec.xCoord *= ROPE_LENGTH;
-					vec.yCoord *= ROPE_LENGTH;
-					vec.zCoord *= ROPE_LENGTH;
+					vec.xCoord *= ropeLength;
+					vec.yCoord *= ropeLength;
+					vec.zCoord *= ropeLength;
 					// Subtract the actual current deltas to get the adjustment we need to make.
 					vec.xCoord -= dx;
 					vec.yCoord -= dy;
