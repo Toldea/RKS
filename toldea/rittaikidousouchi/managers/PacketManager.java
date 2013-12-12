@@ -1,20 +1,13 @@
 package toldea.rittaikidousouchi.managers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.common.network.IPacketHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketManager implements IPacketHandler {
@@ -29,7 +22,7 @@ public class PacketManager implements IPacketHandler {
 		byte packetId = reader.readByte();
 		
 		int entityId;
-
+		/*
 		switch (packetId) {
 		case 0:
 			entityId = reader.readInt();
@@ -38,9 +31,9 @@ public class PacketManager implements IPacketHandler {
 				((EntityGrappleHook) entity).pullOwnerEntityTowardsHook();
 			}
 			break;
-		}
+		}*/
 	}
-	
+	/*
 	public static void sendActiveGrappleHookPacketToAllPlayers(EntityGrappleHook entityGrappleHook) {
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		DataOutputStream dataStream = new DataOutputStream(byteStream);
@@ -53,5 +46,5 @@ public class PacketManager implements IPacketHandler {
 		} catch (IOException ex) {
 			System.err.append("RomeCraft: Failed to send sendActiveGrappleHook packet!");
 		}
-	}
+	}*/
 }
