@@ -13,7 +13,7 @@ import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook;
 public class RenderGrappleHook extends Render {
 
 	private static final ResourceLocation textureGrappleHook = new ResourceLocation("textures/particle/particles.png");
-
+	
 	public void doRenderGrappleHook(EntityGrappleHook entityGrappleHook, double par2, double par4, double par6, float par8, float par9)
     {
 		/*
