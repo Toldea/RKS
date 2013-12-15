@@ -315,7 +315,9 @@ public class EntityGrappleHook extends EntityArrow {
 			double dz = this.posZ - ownerEntity.posZ;
 			double length = (double) MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
 			float currentRopeLength = dataWatcher.getWatchableObjectFloat(18);
-			// Constrain the player's position to the max length of rope.
+			// Constrain either the player or the hook's position to the length of the rope.
+			// When stuck into something, the player will be constrained to the hook.
+			// When still in flight, the hook obviously wouldn't have that power so constrain it to the player instead.
 			if (length > currentRopeLength) {
 				// Normalize and multiply by the length to get the 'theoretical max position'.
 				Vec3 vec = Vec3.createVectorHelper(dx, dy, dz);
@@ -327,8 +329,14 @@ public class EntityGrappleHook extends EntityArrow {
 				vec.xCoord -= dx;
 				vec.yCoord -= dy;
 				vec.zCoord -= dz;
-				// Update the player's position with this adjustment.
-				ownerEntity.setPosition(ownerEntity.posX - vec.xCoord, ownerEntity.posY - vec.yCoord, ownerEntity.posZ - vec.zCoord);
+				
+				if (this.inGround) {
+					// Update the player's position with this adjustment.
+					ownerEntity.setPosition(ownerEntity.posX - vec.xCoord, ownerEntity.posY - vec.yCoord, ownerEntity.posZ - vec.zCoord);
+				} else {
+					// The hook isn't secured into something yet, so constrain the hook to the rope's length.
+					this.setPosition(this.posX + vec.xCoord, this.posY + vec.yCoord, this.posZ + vec.zCoord);
+				}
 			}
 		}
 	}
