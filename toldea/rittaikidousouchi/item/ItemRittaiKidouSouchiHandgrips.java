@@ -92,11 +92,11 @@ public class ItemRittaiKidouSouchiHandgrips extends Item {
 		if (!world.isRemote) {
 			if ((side == Side.Left ? leftGrappleHook : rightGrappleHook) == null) {
 				if (side == Side.Left) {
-					leftGrappleHook = new EntityGrappleHook(world, entityPlayer, 1.5f);
+					leftGrappleHook = new EntityGrappleHook(world, entityPlayer, 2.0f);
 					world.spawnEntityInWorld(leftGrappleHook);
 					spawnedHook = true;
 				} else if (side == Side.Right) {
-					rightGrappleHook = new EntityGrappleHook(world, entityPlayer, 1.5f);
+					rightGrappleHook = new EntityGrappleHook(world, entityPlayer, 2.0f);
 					world.spawnEntityInWorld(rightGrappleHook);
 					spawnedHook = true;
 				}

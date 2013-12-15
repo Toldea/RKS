@@ -33,6 +33,7 @@ public class EntityGrappleHook extends EntityArrow {
 	//
 
 	public static final float MAX_ROPE_LENGTH = 10.0f;
+	public static final float MIN_ROPE_LENGTH = .5f;
 	private float ropeLength = MAX_ROPE_LENGTH;
 	private EntityPlayer ownerEntity;
 	boolean active = false;
@@ -56,7 +57,6 @@ public class EntityGrappleHook extends EntityArrow {
 		// Initialize field 17 to keep track of the owner player entity id.
 		dataWatcher.addObject(17, -1);
 		// Field 18 holds the rope's length.
-		System.out.println("MAX_ROPE_LENGTH: " + MAX_ROPE_LENGTH);
 		dataWatcher.addObject(18, MAX_ROPE_LENGTH);
 	}
 
@@ -343,8 +343,11 @@ public class EntityGrappleHook extends EntityArrow {
 
 	public void reelInGrappleHook() {
 		float currentRopeLength = dataWatcher.getWatchableObjectFloat(18);
-		if (currentRopeLength > .0) {
-			currentRopeLength -= .5;
+		if (currentRopeLength > MIN_ROPE_LENGTH) {
+			currentRopeLength -= .2;
+			if (currentRopeLength < MIN_ROPE_LENGTH) {
+				currentRopeLength = MIN_ROPE_LENGTH;
+			}
 			dataWatcher.updateObject(18, currentRopeLength);
 		}
 	}
