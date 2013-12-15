@@ -13,12 +13,13 @@ import org.lwjgl.input.Mouse;
 
 import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook;
 import toldea.rittaikidousouchi.managers.CreativeTabsManager;
+import toldea.rittaikidousouchi.managers.PacketManager;
 
 public class ItemRittaiKidouSouchiHandgrips extends Item {
 	EntityGrappleHook leftGrappleHook;
 	EntityGrappleHook rightGrappleHook;
 
-	private enum Side {
+	public enum Side {
 		Left, Right
 	};
 
@@ -71,8 +72,9 @@ public class ItemRittaiKidouSouchiHandgrips extends Item {
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		System.out.println("onItemUseFirst");
-		if (Mouse.isButtonDown(2)) {
-			onGrappleHookInteract(Side.Left, world, player);
+		if (Mouse.isButtonDown(1)) {
+			// This is the client side, so send a packet to tell the server we want to interact with the right grappling hook.
+			PacketManager.sendGrappleHookInteractPacketToServer(Side.Right);
 		}
 		return true;
 	}
@@ -85,16 +87,16 @@ public class ItemRittaiKidouSouchiHandgrips extends Item {
 	}
 
 	public void onGrappleHookInteract(Side side, World world, EntityPlayer entityPlayer) {
-		System.out.println("onGrappleHookInteract (side: " + (side == Side.Left ? "left" : "right" + ")"));
+		System.out.println("onGrappleHookInteract (side: " + (side == Side.Left ? "left" : "right") + ")" + "(isRemote: " + world.isRemote + ")");
 		boolean spawnedHook = false;
 		if (!world.isRemote) {
 			if ((side == Side.Left ? leftGrappleHook : rightGrappleHook) == null) {
 				if (side == Side.Left) {
-					leftGrappleHook = new EntityGrappleHook(world, entityPlayer, 1.0f);
+					leftGrappleHook = new EntityGrappleHook(world, entityPlayer, 1.5f);
 					world.spawnEntityInWorld(leftGrappleHook);
 					spawnedHook = true;
 				} else if (side == Side.Right) {
-					rightGrappleHook = new EntityGrappleHook(world, entityPlayer, 1.0f);
+					rightGrappleHook = new EntityGrappleHook(world, entityPlayer, 1.5f);
 					world.spawnEntityInWorld(rightGrappleHook);
 					spawnedHook = true;
 				}
