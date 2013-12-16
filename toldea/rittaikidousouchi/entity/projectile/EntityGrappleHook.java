@@ -10,6 +10,7 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet70GameEvent;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -19,6 +20,10 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityGrappleHook extends EntityArrow {
+	public enum Side {
+		Left, Right
+	};
+
 	// EntityArrow private variables.
 	private int xTile = -1;
 	private int yTile = -1;
@@ -36,7 +41,6 @@ public class EntityGrappleHook extends EntityArrow {
 	public static final float MIN_ROPE_LENGTH = .5f;
 	private float ropeLength = MAX_ROPE_LENGTH;
 	private EntityPlayer ownerEntity;
-	boolean active = false;
 
 	public EntityGrappleHook(World world) {
 		super(world);
@@ -46,10 +50,13 @@ public class EntityGrappleHook extends EntityArrow {
 		super(world, x, y, z);
 	}
 
-	public EntityGrappleHook(World world, EntityPlayer entityPlayer, float speed) {
+	public EntityGrappleHook(World world, EntityPlayer entityPlayer, float speed, Side side) {
 		super(world, entityPlayer, speed);
 		this.ownerEntity = entityPlayer;
 		dataWatcher.updateObject(17, ownerEntity.entityId);
+		if (side == Side.Right) {
+			dataWatcher.updateObject(19, (byte) 1);
+		}
 	}
 
 	protected void entityInit() {
@@ -58,6 +65,8 @@ public class EntityGrappleHook extends EntityArrow {
 		dataWatcher.addObject(17, -1);
 		// Field 18 holds the rope's length.
 		dataWatcher.addObject(18, MAX_ROPE_LENGTH);
+		// Field 19 holds the rope's 'side' or from which of the two grapple hook shooters it was shot from.
+		dataWatcher.addObject(19, (byte) 0);
 	}
 
 	public EntityPlayer getOwner() {
@@ -70,6 +79,11 @@ public class EntityGrappleHook extends EntityArrow {
 			}
 		}
 		return this.ownerEntity;
+	}
+
+	public Side getSide() {
+		byte sideByte = dataWatcher.getWatchableObjectByte(19);
+		return (sideByte == 0 ? Side.Left : Side.Right);
 	}
 
 	@Override
@@ -329,7 +343,7 @@ public class EntityGrappleHook extends EntityArrow {
 				vec.xCoord -= dx;
 				vec.yCoord -= dy;
 				vec.zCoord -= dz;
-				
+
 				if (this.inGround) {
 					// Update the player's position with this adjustment.
 					ownerEntity.setPosition(ownerEntity.posX - vec.xCoord, ownerEntity.posY - vec.yCoord, ownerEntity.posZ - vec.zCoord);
@@ -358,5 +372,54 @@ public class EntityGrappleHook extends EntityArrow {
 		 * //if (!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0) if (this.inGround && this.arrowShake <= 0) { if (active) { active = false;
 		 * System.out.println("Collided with grappling hook, setting inactive!"); } }
 		 */
+	}
+
+	public void writeEntityToNBT(NBTTagCompound tagCompound) {
+		// Default arrow NBT
+		tagCompound.setShort("xTile", (short) this.xTile);
+		tagCompound.setShort("yTile", (short) this.yTile);
+		tagCompound.setShort("zTile", (short) this.zTile);
+		tagCompound.setByte("inTile", (byte) this.inTile);
+		tagCompound.setByte("inData", (byte) this.inData);
+		tagCompound.setByte("shake", (byte) this.arrowShake);
+		tagCompound.setByte("inGround", (byte) (this.inGround ? 1 : 0));
+		tagCompound.setByte("pickup", (byte) this.canBePickedUp);
+		tagCompound.setDouble("damage", this.damage);
+
+		// Grapple hook NBT
+		tagCompound.setFloat("ropeLength", ropeLength);
+		tagCompound.setShort("ownerEntityId", (short) ownerEntity.entityId);
+		tagCompound.setByte("side", dataWatcher.getWatchableObjectByte(19));
+	}
+
+	public void readEntityFromNBT(NBTTagCompound tagCompound) {
+		// Default arrow NBT
+		this.xTile = tagCompound.getShort("xTile");
+		this.yTile = tagCompound.getShort("yTile");
+		this.zTile = tagCompound.getShort("zTile");
+		this.inTile = tagCompound.getByte("inTile") & 255;
+		this.inData = tagCompound.getByte("inData") & 255;
+		this.arrowShake = tagCompound.getByte("shake") & 255;
+		this.inGround = tagCompound.getByte("inGround") == 1;
+		if (tagCompound.hasKey("damage")) {
+			this.damage = tagCompound.getDouble("damage");
+		}
+		if (tagCompound.hasKey("pickup")) {
+			this.canBePickedUp = tagCompound.getByte("pickup");
+		} else if (tagCompound.hasKey("player")) {
+			this.canBePickedUp = tagCompound.getBoolean("player") ? 1 : 0;
+		}
+
+		// Grapple hook NBT
+		this.ropeLength = tagCompound.getFloat("ropeLenght");
+		int ownerEntityId = tagCompound.getShort("ownerEntityId");
+		Entity entity = worldObj.getEntityByID(ownerEntityId);
+		if (entity != null && entity instanceof EntityPlayer) {
+			this.ownerEntity = (EntityPlayer) entity;
+		} else {
+			this.setDead();
+		}
+		byte sideByte = tagCompound.getByte("side");
+		dataWatcher.updateObject(19, sideByte);
 	}
 }

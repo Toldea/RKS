@@ -25,7 +25,7 @@ public class ModelRittaiKidouSouchi extends ModelBiped {
 		renderScabbard(.3, 5.0); // Right Scabbard
 		renderScabbard(-.3, -5.0); // Left Scabbard
 		renderHookShooter(.24, 1.0); // Right Hook Shooter
-		renderHookShooter(-.2, -1.0); // Left Hook Shooter
+		renderHookShooter(-.24, -1.0); // Left Hook Shooter
 	}
 
 	public void renderBackPiece() {

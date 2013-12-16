@@ -12,6 +12,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook;
+import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook.Side;
 import toldea.rittaikidousouchi.managers.CreativeTabsManager;
 import toldea.rittaikidousouchi.managers.ItemManager;
 import toldea.rittaikidousouchi.managers.PacketManager;
@@ -19,10 +20,6 @@ import toldea.rittaikidousouchi.managers.PacketManager;
 public class ItemRittaiKidouSouchiHandgrips extends Item {
 	EntityGrappleHook leftGrappleHook;
 	EntityGrappleHook rightGrappleHook;
-
-	public enum Side {
-		Left, Right
-	};
 
 	public ItemRittaiKidouSouchiHandgrips(int id) {
 		super(id);
@@ -102,11 +99,11 @@ public class ItemRittaiKidouSouchiHandgrips extends Item {
 		if (!world.isRemote) {
 			if ((side == Side.Left ? leftGrappleHook : rightGrappleHook) == null) {
 				if (side == Side.Left) {
-					leftGrappleHook = new EntityGrappleHook(world, entityPlayer, 2.0f);
+					leftGrappleHook = new EntityGrappleHook(world, entityPlayer, 2.0f, Side.Left);
 					world.spawnEntityInWorld(leftGrappleHook);
 					spawnedHook = true;
 				} else if (side == Side.Right) {
-					rightGrappleHook = new EntityGrappleHook(world, entityPlayer, 2.0f);
+					rightGrappleHook = new EntityGrappleHook(world, entityPlayer, 2.0f, Side.Right);
 					world.spawnEntityInWorld(rightGrappleHook);
 					spawnedHook = true;
 				}

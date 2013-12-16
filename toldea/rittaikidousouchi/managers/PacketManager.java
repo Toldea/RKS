@@ -8,8 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook.Side;
 import toldea.rittaikidousouchi.item.ItemRittaiKidouSouchiHandgrips;
-import toldea.rittaikidousouchi.item.ItemRittaiKidouSouchiHandgrips.Side;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;

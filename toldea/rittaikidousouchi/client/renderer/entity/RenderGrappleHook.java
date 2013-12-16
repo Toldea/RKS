@@ -1,5 +1,6 @@
 package toldea.rittaikidousouchi.client.renderer.entity;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
@@ -9,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook;
+import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook.Side;
 
 public class RenderGrappleHook extends Render {
 
@@ -94,7 +96,14 @@ public class RenderGrappleHook extends Render {
             */
             
             tessellator.addVertex(entityGrappleHook.posX - ownerPlayer.posX, entityGrappleHook.posY - ownerPlayer.posY, entityGrappleHook.posZ - ownerPlayer.posZ);
-            tessellator.addVertex(0d, 0d, 0d);
+            
+            Side side = entityGrappleHook.getSide();
+            
+            if (this.renderManager.options.thirdPersonView > 0 || ownerPlayer != Minecraft.getMinecraft().thePlayer) {
+            	tessellator.addVertex((side == Side.Left ? -.24 : .24), -.55, 0d);
+            } else {
+            	tessellator.addVertex(0d, 0d, 0d);
+            }
 
             tessellator.draw();
             GL11.glEnable(GL11.GL_LIGHTING);
