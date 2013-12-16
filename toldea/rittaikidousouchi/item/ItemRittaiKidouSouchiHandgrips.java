@@ -13,6 +13,7 @@ import org.lwjgl.input.Mouse;
 
 import toldea.rittaikidousouchi.entity.projectile.EntityGrappleHook;
 import toldea.rittaikidousouchi.managers.CreativeTabsManager;
+import toldea.rittaikidousouchi.managers.ItemManager;
 import toldea.rittaikidousouchi.managers.PacketManager;
 
 public class ItemRittaiKidouSouchiHandgrips extends Item {
@@ -32,7 +33,8 @@ public class ItemRittaiKidouSouchiHandgrips extends Item {
 
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+		// if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (leftGrappleHook != null) {
 				leftGrappleHook.reelInGrappleHook();
 			}
@@ -87,6 +89,14 @@ public class ItemRittaiKidouSouchiHandgrips extends Item {
 	}
 
 	public void onGrappleHookInteract(Side side, World world, EntityPlayer entityPlayer) {
+		if (entityPlayer == null) {
+			return;
+		}
+		ItemStack equippedLegItem = entityPlayer.getCurrentArmor(1);
+		// Make sure the player is wearing the armor piece.
+		if (equippedLegItem == null || equippedLegItem.itemID != ItemManager.itemRRKSArmor.itemID) {
+			return;
+		}
 		System.out.println("onGrappleHookInteract (side: " + (side == Side.Left ? "left" : "right") + ")" + "(isRemote: " + world.isRemote + ")");
 		boolean spawnedHook = false;
 		if (!world.isRemote) {
