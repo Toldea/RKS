@@ -103,22 +103,31 @@ public class RenderGrappleHook extends Render {
 
 				f2 = (float) i / 24.0F;
 
-				tessellator.addVertex((side == Side.Left ? .24 : -.24) + par2 * (double) f2 + 0.0D, ((1-f2) * -1.5) + par4 * (double) (f2 * f2 + f2) * 0.5D + (double) ((24.0F - (float) i) / 18.0F + 0.125F), par6
-						* (double) f2);
-				tessellator.addVertex((side == Side.Left ? .24 : -.24) + par2 * (double) f2 + 0.025D, ((1-f2) * -1.5) + par4 * (double) (f2 * f2 + f2) * 0.5D + (double) ((24.0F - (float) i) / 18.0F + 0.125F)
-						+ 0.025D, par6 * (double) f2);
+				tessellator.addVertex((side == Side.Left ? .24 : -.24) + par2 * (double) f2 + 0.0D, ((1 - f2) * -1.5) + par4 * (double) (f2 * f2 + f2) * 0.5D
+						+ (double) ((24.0F - (float) i) / 18.0F + 0.125F), par6 * (double) f2);
+				tessellator.addVertex((side == Side.Left ? .24 : -.24) + par2 * (double) f2 + 0.025D, ((1 - f2) * -1.5) + par4 * (double) (f2 * f2 + f2) * 0.5D
+						+ (double) ((24.0F - (float) i) / 18.0F + 0.125F) + 0.025D, par6 * (double) f2);
 
 			}
 
 			tessellator.draw();
-			/*
-			 * tessellator.startDrawing(5); for (i = 0; i <= 24; ++i) { if (i % 2 == 0) { tessellator.setColorRGBA_F(0.5F, 0.4F, 0.3F, 1.0F); } else {
-			 * tessellator.setColorRGBA_F(0.35F, 0.28F, 0.21000001F, 1.0F); }
-			 * 
-			 * f2 = (float) i / 24.0F; tessellator.addVertex(par2 * (double) f2 + 0.0D, par4 * (double) (f2 * f2 + f2) * 0.5D + (double) ((24.0F - (float) i) /
-			 * 18.0F + 0.125F) + 0.025D, par6 * (double) f2); tessellator.addVertex(par2 * (double) f2 + 0.025D, par4 * (double) (f2 * f2 + f2) * 0.5D +
-			 * (double) ((24.0F - (float) i) / 18.0F + 0.125F), par6 * (double) f2 + 0.025D); } tessellator.draw();
-			 */
+
+			tessellator.startDrawing(5);
+			for (i = 0; i <= 24; ++i) {
+				if (i % 2 == 0) {
+					tessellator.setColorRGBA_F(0.5F, 0.4F, 0.3F, 1.0F);
+				} else {
+					tessellator.setColorRGBA_F(0.35F, 0.28F, 0.21000001F, 1.0F);
+				}
+
+				f2 = (float) i / 24.0F;
+				tessellator.addVertex((side == Side.Left ? .24 : -.24) + par2 * (double) f2 + 0.0D, ((1 - f2) * -1.5) + par4 * (double) (f2 * f2 + f2) * 0.5D
+						+ (double) ((24.0F - (float) i) / 18.0F + 0.125F) + 0.025D, par6 * (double) f2);
+				tessellator.addVertex((side == Side.Left ? .24 : -.24) + par2 * (double) f2 + 0.025D, ((1 - f2) * -1.5) + par4 * (double) (f2 * f2 + f2) * 0.5D
+						+ (double) ((24.0F - (float) i) / 18.0F + 0.125F), par6 * (double) f2 + 0.025D);
+			}
+			tessellator.draw();
+
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_CULL_FACE);
@@ -131,7 +140,7 @@ public class RenderGrappleHook extends Render {
 
 	@Override
 	public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9) {
-		//this.doRenderGrappleHook((EntityGrappleHook) par1Entity, par2, par4, par6, par8, par9);
+		// this.doRenderGrappleHook((EntityGrappleHook) par1Entity, par2, par4, par6, par8, par9);
 		this.kuroiYami((EntityGrappleHook) par1Entity, par2, par4, par6, par8, par9);
 	}
 
