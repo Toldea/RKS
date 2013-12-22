@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemRittaiKidouSouchiArmor extends ItemArmor {
-	ResourceLocation textureLoricaSegmentata = new ResourceLocation("rittaikidousouchi", "textures/models/armor/temparmor.png");
+	ResourceLocation textureLoricaSegmentata = new ResourceLocation("rittaikidousouchi", "textures/models/armor/rks_backpiece.png");
 	private ModelBiped armorModel;
 	
 	public ItemRittaiKidouSouchiArmor(int id, EnumArmorMaterial material, int renderIndex, int armorType) {
