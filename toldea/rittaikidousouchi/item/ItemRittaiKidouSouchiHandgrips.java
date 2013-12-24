@@ -33,10 +33,10 @@ public class ItemRittaiKidouSouchiHandgrips extends Item {
 		// if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (leftGrappleHook != null) {
-				leftGrappleHook.reelInGrappleHook();
+				leftGrappleHook.activateGrappleHook();
 			}
 			if (rightGrappleHook != null) {
-				rightGrappleHook.reelInGrappleHook();
+				rightGrappleHook.activateGrappleHook();
 			}
 		}
 	}

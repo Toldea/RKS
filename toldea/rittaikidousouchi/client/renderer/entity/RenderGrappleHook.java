@@ -82,7 +82,9 @@ public class RenderGrappleHook extends Render {
 	}
 
 	protected void kuroiYami(EntityGrappleHook entityGrappleHook, double par2, double par4, double par6, float par8, float par9) {
-		// EntityPlayer ownerPlayer = entityGrappleHook.getOwner();
+		//EntityPlayer ownerPlayer = entityGrappleHook.getOwner();
+		//Vec3 vector = ownerPlayer.getLookVec();
+		//System.out.println("lookVec: " + ownerPlayer.getLookVec());
 
 		if (entityGrappleHook != null) {
 			Tessellator tessellator = Tessellator.instance;

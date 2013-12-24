@@ -41,6 +41,7 @@ public class EntityGrappleHook extends EntityArrow {
 	public static final float MIN_ROPE_LENGTH = .5f;
 	private float ropeLength = MAX_ROPE_LENGTH;
 	private EntityPlayer ownerEntity;
+	private boolean activated = false;
 
 	public EntityGrappleHook(World world) {
 		super(world);
@@ -324,6 +325,10 @@ public class EntityGrappleHook extends EntityArrow {
 
 	public void grapplingHookUpdate() {
 		if (getOwner() != null) {
+			if (activated) {
+				reelInGrappleHook();
+			}
+			
 			double dx = this.posX - ownerEntity.posX;
 			double dy = this.posY - ownerEntity.posY;
 			double dz = this.posZ - ownerEntity.posZ;
@@ -355,7 +360,7 @@ public class EntityGrappleHook extends EntityArrow {
 		}
 	}
 
-	public void reelInGrappleHook() {
+	private void reelInGrappleHook() {
 		float currentRopeLength = dataWatcher.getWatchableObjectFloat(18);
 		if (currentRopeLength > MIN_ROPE_LENGTH) {
 			currentRopeLength -= .2;
@@ -364,6 +369,10 @@ public class EntityGrappleHook extends EntityArrow {
 			}
 			dataWatcher.updateObject(18, currentRopeLength);
 		}
+	}
+	
+	public void activateGrappleHook() {
+		activated = true;
 	}
 
 	@Override
